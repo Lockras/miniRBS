@@ -1,7 +1,10 @@
 import java.sql.*;
+import org.sqlite.JDBC;
+import org.sqlite.SQLite;
 
 
 public class dbInteraction {
+	public static Connection c = null;
 	
 	public static void main(String[] args) {
 		
@@ -17,47 +20,31 @@ public class dbInteraction {
 	}
 	
 	public static void dbConn(){
-		Connection c = null;
-	    Statement stmt = null;
 	    try {
 	      Class.forName("org.sqlite.JDBC");
 	      c = DriverManager.getConnection("jdbc:sqlite:test.db");
-	      System.out.println("Opened database successfully");
-
-	      stmt = c.createStatement();
-	      String sql = "CREATE TABLE COMPANY " +
-	                   "(ID INTEGER PRIMARY KEY     NOT NULL," +
-	                   " NAME           TEXT    NOT NULL, " + 
-	                   " AGE            INT     NOT NULL, " + 
-	                   " ADDRESS        CHAR(50), " + 
-	                   " SALARY         REAL)"; 
-	      stmt.executeUpdate(sql);
-	      stmt.close();
-	      c.close();
+	      c.setAutoCommit(false);
 	    } catch ( Exception e ) {
 	      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 	      System.exit(0);
 	    }
-	    System.out.println("Table created successfully");
 	}
 	
-	public static void tblCreate(){
-		/*Statement stmt = null;
-		try {
+	public static void newUser(String login, String pass){
+		Statement stmt = null;
+		try{
 			stmt = c.createStatement();
-			String sql = "CREATE TABLE USERS " +
-			"(ID INT PRIMARY KEY NOT NULL, " +
-			"LOGIN TEXT NOT NULL" +
-			"PASS TEXT NOT NULL" +
-			"ADMIN INT)";
-			stmt.executeUpdate(sql);
+			String sql = "insert into 'USERS' ('ID', 'LOGIN', 'PASS') values (2, 'login', 'pass'); ";
+			stmt.execute(sql);
 			stmt.close();
+			c.commit();
 			c.close();
 		}
-		catch (Exception e) {
-			System.err.println(e.getClass().getName()+": "+e.getMessage() );
-			System.exit(0);
+		catch ( Exception e ) {
+		      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		      System.exit(0);
 		}
-		System.out.println("Table created successfully");*/
+		
+		
 	}
 }
