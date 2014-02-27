@@ -1,6 +1,9 @@
-import java.sql.*;
-import org.sqlite.JDBC;
-import org.sqlite.SQLite;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Random;
 
 
 public class dbInteraction {
@@ -28,13 +31,19 @@ public class dbInteraction {
 	      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 	      System.exit(0);
 	    }
+	    System.out.println("Opened");
 	}
 	
 	public static void newUser(String login, String pass){
 		Statement stmt = null;
+		Random randomGenerator = new Random();
+		int id=2;
 		try{
+			while (isIdInTable(id)){
+				id = randomGenerator.nextInt(10000);
+			}
 			stmt = c.createStatement();
-			String sql = "insert into 'USERS' ('ID', 'LOGIN', 'PASS') values (2, 'login', 'pass'); ";
+			String sql = "insert into USERS (ID, LOGIN, PASS) values ("+id+", '"+login+"', '"+pass+"'); ";
 			stmt.execute(sql);
 			stmt.close();
 			c.commit();
@@ -44,7 +53,22 @@ public class dbInteraction {
 		      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 		      System.exit(0);
 		}
-		
-		
+		System.out.println("Inserted");
+	}
+	public static boolean isIdInTable(int id){
+		Statement stmt = null;
+		try {
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from USERS; ");
+			while (rs.next()){
+				int _id = rs.getInt("ID");
+				if (id ==_id){
+					return true;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }
