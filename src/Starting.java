@@ -5,8 +5,10 @@ public class Starting {
 	
 	public static void main(String[] args) {
 		//dbInteraction.dbConn();
-		//dbInteraction.newUser("boot", "13234");
-		//dbInteraction.userAuth("admin", "admin");
+		//dbInteraction.newUser("root", "root", "TRUE");
+		dbInteraction.userAuth("root", "root");
+		System.out.println(currentUser);
+		System.out.println(isAdmin);
 	}
 
 }

@@ -23,7 +23,8 @@ public class dbInteraction {
 						System.out.println("Login successfully");
 						c.close();
 						Starting.currentUser = lgn;
-						Starting.isAdmin = rs.getBoolean("ADMIN");
+						Starting.isAdmin = rs.getInt("ADMIN")>0;
+						System.out.println(rs.getInt("ADMIN")>0);
 						return true;
 					}
 					else {
@@ -56,7 +57,7 @@ public class dbInteraction {
 	    System.out.println("Opened");
 	}
 	
-	public static void newUser(String login, String pass){
+	public static void newUser(String login, String pass, String admin){
 		Statement stmt = null;
 		Random randomGenerator = new Random();
 		int id=2;
@@ -77,7 +78,7 @@ public class dbInteraction {
 		    }
 		    System.out.println("No such user, adding...");
 			stmt = c.createStatement();
-			String sql = "insert into USERS (ID, LOGIN, PASS) values ("+id+", '"+login+"', '"+pass+"'); ";
+			String sql = "insert into USERS (ID, LOGIN, PASS, ADMIN) values ("+id+", '"+login+"', '"+pass+"', '"+admin+"'); ";
 			stmt.execute(sql);
 			stmt.close();
 			c.commit();
