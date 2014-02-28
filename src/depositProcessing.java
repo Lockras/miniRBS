@@ -5,10 +5,6 @@ public class depositProcessing {
 	static int _accSum;
 	static byte _prc;
 	static String _dateStr, _dateEnd;
-	public static void main(String[] args) {
-		
-		
-	}
 	
 	public static void newDeposit(int accSum, byte prc, String dateStr, String dateEnd){
 		_accSum = accSum;
