@@ -64,7 +64,6 @@ public class dbInteraction {
 		try 
 		{
 			dbConn();
-		    System.out.println("Opened");
 		    if (isLoginInTable(login)){
 		    	System.out.println("User already exists");
 		    	c.commit();
@@ -72,7 +71,7 @@ public class dbInteraction {
 		    	return;
 		    }
 		    else {
-		    	while (isIdInTable(id)){
+		    	while (isIdInTable(id, "USERS")){
 					id = randomGenerator.nextInt(10000);
 				}
 		    }
@@ -99,11 +98,11 @@ public class dbInteraction {
 		System.out.println("Inserted");
 	}
 	
-	public static boolean isIdInTable(int id){ //return true if id already exists in db
+	public static boolean isIdInTable(int id, String table){ //return true if id already exists in db
 		Statement stmt = null;
 		try {
 			stmt = c.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from USERS; ");
+			ResultSet rs = stmt.executeQuery("select * from "+table+"; ");
 			while (rs.next()){
 				int _id = rs.getInt("ID");
 				if (id ==_id){
@@ -136,4 +135,74 @@ public class dbInteraction {
 		}
 		return false;
 	}
+	
+	public static void newClient(String name, String surname, int num, int ser){//creating of new client
+		dbConn();
+		Statement stmt = null;
+		Random randomGenerator = new Random();
+		int id=1;
+		try 
+		{
+		    while (isIdInTable(id, "CLIENT")){
+					id = randomGenerator.nextInt(10000);
+				}
+			stmt = c.createStatement();
+			String sql = "insert into CLIENT (ID, NAME, SURNAME, PASSPNUM, PASSPSER) values ("+id+", '"+name+"', '"+surname+"', "+num+", "+ser+"); ";
+			stmt.execute(sql);
+			stmt.close();
+			c.commit();
+			c.close();
+		}
+		catch ( Exception e ) {
+		    System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		    System.exit(0);
+		}
+		finally {
+			try{
+				c.close();
+			}
+			catch (SQLException e){
+				
+			}
+		}
+		System.out.println("Inserted");
+	}
+	
+	public static void newDeposit(int balance, int val, int num, int branch, int accnum, int clientid, int perc, String cdate){
+		dbConn();
+		Statement stmt = null;
+		Random randomGenerator = new Random();
+		int id=1;
+		if (!isIdInTable(clientid, "CLIENT")){
+			System.out.println("No such client");
+			return;
+		}
+		try {
+			while (isIdInTable(id, "DEPACCOUNTS")){
+				id = randomGenerator.nextInt(10000);
+			}
+			stmt = c.createStatement();
+			String sql = "insert into DEPACCOUNTS (ID, BALANCE, VAL, VALIDNUM, BRANCH, ACCNUM, CLIENTID, SUMM, PERC, CDATE) values " +
+					"("+id+", "+balance+", "+val+", "+num+", "+branch+", "+accnum+",  "+clientid+", "+0+", "+perc+",  "+cdate+"); ";
+			stmt.execute(sql);
+			stmt.close();
+			c.commit();
+			c.close();
+		}
+		catch (Exception e){
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		    System.exit(0);
+		}
+		finally {
+			try{
+				c.close();
+			}
+			catch (SQLException e){
+				
+			}
+		}
+		System.out.println("Inserted");
+	}
+	
+	
 }
