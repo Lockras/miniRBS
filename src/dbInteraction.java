@@ -198,11 +198,37 @@ public class dbInteraction {
 				c.close();
 			}
 			catch (SQLException e){
-				
+				System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			    System.exit(0);
 			}
 		}
 		System.out.println("Inserted");
 	}
 	
+	public static void depList(int cliendID){
+		dbConn();
+		Statement stmt = null;
+		try {
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from DEPACCOUNTS where CLIENTID = "+cliendID+"; ");
+			while (rs.next()){
+				String acc = rs.getString("BALANCE")+"-"+rs.getString("VAL")+"-"+rs.getString("VALIDNUM")+"-";
+				while ((acc.length()+rs.getString("BRANCH").length())<16){
+					acc+="0";
+				}
+				acc+=rs.getString("BRANCH")+"-";
+				while ((acc.length()+rs.getString("ACCNUM").length())<24){
+					acc+="0";
+				}
+				acc+=rs.getString("ACCNUM");
+				System.out.println(acc);
+			}
+			rs.close();
+		}
+		catch (SQLException e){
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		    System.exit(0);
+		}
+	}
 	
 }
