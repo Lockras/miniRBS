@@ -3,10 +3,10 @@ public class depositProcessing {
 	
 	static int newAccSum;
 	static int _accSum;
-	static byte _prc;
+	static int _prc;
 	static String _dateStr, _dateEnd;
 	
-	public static void newDeposit(int accSum, byte prc, String dateStr, String dateEnd){
+	public static void newDeposit(int accSum, int prc, String dateStr, String dateEnd){
 		_accSum = accSum;
 		_prc = prc;
 		_dateStr = dateStr;

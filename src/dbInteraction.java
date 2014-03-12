@@ -205,12 +205,20 @@ public class dbInteraction {
 		System.out.println("Inserted");
 	}
 	
-	public static void depList(int cliendID){
+	public static Object[][] depList(){
 		dbConn();
 		Statement stmt = null;
+		String[][] result;
 		try {
 			stmt = c.createStatement();
-			ResultSet rs = stmt.executeQuery("select * from DEPACCOUNTS where CLIENTID = "+cliendID+"; ");
+			ResultSet rs = stmt.executeQuery("select * from DEPACCOUNTS; ");
+			int length =0;
+			while (rs.next()){
+				length++;
+			}
+			result = new String[length][1];
+			rs = stmt.executeQuery("select * from DEPACCOUNTS; ");
+			int i =0;
 			while (rs.next()){
 				String acc = rs.getString("BALANCE")+"-"+rs.getString("VAL")+"-"+rs.getString("VALIDNUM")+"-";
 				while ((acc.length()+rs.getString("BRANCH").length())<16){
@@ -221,9 +229,70 @@ public class dbInteraction {
 					acc+="0";
 				}
 				acc+=rs.getString("ACCNUM");
+				result[i][0]=acc;
+				i++;
 				System.out.println(acc);
 			}
 			rs.close();
+		}
+		catch (SQLException e){
+			result = new String[1][1];
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		    System.exit(0);
+		}
+		return result;
+	}
+	
+	public static String[] depList(int cliendID){
+		dbConn();
+		Statement stmt = null;
+		String[] result;
+		try {
+			stmt = c.createStatement();
+			ResultSet rs = stmt.executeQuery("select * from DEPACCOUNTS where CLIENTID = "+cliendID+"; ");
+			int length =0;
+			while (rs.next()){
+				length++;
+			}
+			result = new String[length];
+			rs = stmt.executeQuery("select * from DEPACCOUNTS where CLIENTID = "+cliendID+"; ");
+			int i =0;
+			while (rs.next()){
+				String acc = rs.getString("BALANCE")+"-"+rs.getString("VAL")+"-"+rs.getString("VALIDNUM")+"-";
+				while ((acc.length()+rs.getString("BRANCH").length())<16){
+					acc+="0";
+				}
+				acc+=rs.getString("BRANCH")+"-";
+				while ((acc.length()+rs.getString("ACCNUM").length())<24){
+					acc+="0";
+				}
+				acc+=rs.getString("ACCNUM");
+				result[i]=acc;
+				i++;
+				System.out.println(acc);
+			}
+			rs.close();
+		}
+		catch (SQLException e){
+			result = new String[1];
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		    System.exit(0);
+		}
+		return result;
+	}
+	
+	public static void insert(String table, String field, String def){
+		dbConn();
+		Statement stmt = null;
+		try {
+			stmt = c.createStatement();
+			String sql = "insert into "+table+" ("+field;
+			sql += ") values ("+def;
+			sql += ");";
+			stmt.execute(sql);
+			stmt.close();
+			c.commit();
+			c.close();
 		}
 		catch (SQLException e){
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -231,4 +300,24 @@ public class dbInteraction {
 		}
 	}
 	
+	public static void insert(String table, String field, String def, String field2, String def2){
+		dbConn();
+		Statement stmt = null;
+		try {
+			stmt = c.createStatement();
+			String sql = "insert into "+table+" ("+field;
+			sql += " ,"+field2; 
+			sql += ") values ("+def;
+			sql += " ,"+def2;
+			sql += ");";
+			stmt.execute(sql);
+			stmt.close();
+			c.commit();
+			c.close();
+		}
+		catch (SQLException e){
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		    System.exit(0);
+		}
+	}
 }

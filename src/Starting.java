@@ -1,10 +1,20 @@
+import javax.swing.SwingUtilities;
+
 public class Starting {
 	public static String currentUser;
 	public static boolean isAdmin;
-	//TODO Uncomment public static boolean isLoggedIn;
+	//TODO Uncomment 
+	//public static boolean isLoggedIn;
 
 	
 	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				Interface ui = new Interface();
+				ui.setVisible(true);
+			}
+		});
 		//dbInteraction.dbConn();
 		//dbInteraction.newUser("root", "root", "TRUE");
 		//dbInteraction.userAuth("root", "root");
